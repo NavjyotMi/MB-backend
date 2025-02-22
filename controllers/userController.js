@@ -53,11 +53,11 @@ module.exports.signupHandler = catchAsync(async (req, res) => {
     status: "Success",
     message: "User created Succesfully",
     token: jwt,
-    user: {
-      user: userCreated._id,
-      role: userCreated.role,
-      email: userCreated.email,
-    },
+    // user: {
+    //   user: userCreated._id,
+    //   role: userCreated.role,
+    //   email: userCreated.email,
+    // },
   });
 });
 
@@ -104,7 +104,7 @@ module.exports.signInHandler = catchAsync(async (req, res) => {
     status: "Success",
     message: "you are succefully loged in",
     jwt,
-    user: { user: user._id, role: user.role, email: user.email },
+    // user: { user: user._id, role: user.role, email: user.email },
   });
 });
 
