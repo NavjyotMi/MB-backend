@@ -113,7 +113,7 @@ module.exports.getUserInfo = catchAsync(async (req, res) => {
   const { _id } = req.user;
 
   const users = await User.findById(_id).select(
-    "fname lname gender dob accountStatus role"
+    "fname lname accountStatus role"
   );
 
   if (!users) {
