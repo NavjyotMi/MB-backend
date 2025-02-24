@@ -150,7 +150,7 @@ module.exports.deleteProduct = catchAsync(async (req, res) => {
 module.exports.showAllProduct = catchAsync(async (req, res) => {
   console.log(req.query);
   const page = Math.max(Number(req.query.page) || 1, 1);
-  const limit = 3;
+  const limit = 10;
   const sorting = req.query.sort === "desc" ? -1 : 1;
   const skip = limit * (page - 1);
   const productQuery = {};
@@ -198,14 +198,14 @@ module.exports.showAllProduct = catchAsync(async (req, res) => {
 
 module.exports.getProductbyId = catchAsync(async (req, res) => {
   const { id } = req.params;
-
+  // console.log(id);
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new AppError(400, "Invalid product ID");
   }
 
   const product = await Product.findById({ _id: id });
   if (!product) throw new AppError(404, "Product not found");
-
+  // console.log(product);
   res.status(200).json({
     status: "success",
     message: "Product succesffully sent",

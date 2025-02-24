@@ -18,11 +18,11 @@ const signupSchema = zod.object({
 // User Registation
 module.exports.signupHandler = catchAsync(async (req, res) => {
   const incommingData = req.body;
-  const { success } = signupSchema.safeParse(incommingData);
+  const { success, error } = signupSchema.safeParse(incommingData);
   if (!success) {
     throw new AppError(
       400,
-      parsedData.error.errors[0].message || "Please Enter valid credentials"
+      error.errors[0].message || "Please Enter valid credentials"
     );
   }
 
@@ -53,11 +53,6 @@ module.exports.signupHandler = catchAsync(async (req, res) => {
     status: "Success",
     message: "User created Succesfully",
     token: jwt,
-    // user: {
-    //   user: userCreated._id,
-    //   role: userCreated.role,
-    //   email: userCreated.email,
-    // },
   });
 });
 
@@ -99,19 +94,19 @@ module.exports.signInHandler = catchAsync(async (req, res) => {
     email: user.email,
   });
 
+  console.log(jwt);
   // final sending of data
   res.json({
     status: "Success",
     message: "you are succefully loged in",
-    jwt,
-    // user: { user: user._id, role: user.role, email: user.email },
+    token: jwt,
   });
 });
 
 // Get the user info
 module.exports.getUserInfo = catchAsync(async (req, res) => {
   const { _id } = req.user;
-
+  console.log(_id);
   const users = await User.findById(_id).select(
     "fname lname accountStatus role"
   );
