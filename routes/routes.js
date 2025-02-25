@@ -7,6 +7,7 @@ const cartRouter = require("./cartRoutes");
 const paymentRoute = require("./paymentRoutes");
 const orderRoute = require("./orderRoutes");
 route.get("/", showAllProduct);
+route.get("/search", showAllProduct);
 route.use("/user", userRouter);
 route.use("/product", productRouter);
 route.use("/cart", cartRouter);
