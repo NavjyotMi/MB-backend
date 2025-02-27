@@ -148,7 +148,7 @@ module.exports.deleteProduct = catchAsync(async (req, res) => {
 });
 
 module.exports.showAllProduct = catchAsync(async (req, res) => {
-  console.log(req.query);
+  // console.log(req.query);
   const page = Math.max(Number(req.query.page) || 1, 1);
   const limit = 10;
   const sorting = req.query.sort === "desc" ? -1 : 1;
@@ -182,6 +182,11 @@ module.exports.showAllProduct = catchAsync(async (req, res) => {
     .sort({ price: sorting })
     .lean();
 
+  // console.log(products);
+  // if (products.length === 0)
+  //   return res.status(200).json({ message: "No product found" }
+  // );
+
   res.json({
     message: "All your products",
     data: {
@@ -210,5 +215,13 @@ module.exports.getProductbyId = catchAsync(async (req, res) => {
     status: "success",
     message: "Product succesffully sent",
     data: { product },
+  });
+});
+
+module.exports.getCategory = catchAsync(async (req, res) => {
+  console.log("this is hit");
+  const categories = await Product.distinct("category");
+  res.json({
+    category: categories,
   });
 });

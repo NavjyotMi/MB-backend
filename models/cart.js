@@ -16,6 +16,8 @@ const cartSchema = new mongoose.Schema({
         ref: "User",
         required: true,
       },
+      name: String,
+      imageUrl: String,
     },
   ],
   totalQuantity: { type: Number, required: true, default: 0 },

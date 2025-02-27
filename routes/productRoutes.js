@@ -5,11 +5,13 @@ const {
   deleteProduct,
   updateProduct,
   getProductbyId,
+  getCategory,
 } = require("../controllers/productController");
 const { authenticate } = require("../utils/authorization");
 const adminOnly = require("../middlewares/adminCheck");
 
 routes = express.Router();
+routes.get("/category", getCategory);
 routes.post(
   "/upload",
   authenticate,

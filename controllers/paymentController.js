@@ -2,19 +2,21 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const process = require("process");
 const catchAsync = require("../utils/catchAsync");
+const { Console } = require("console");
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 module.exports.createPayment = catchAsync(async (req, res) => {
+  console.log("req body is hit", req.body);
   const options = {
-    amount: 50000, // amount in paise (50000 paise = ₹500)
+    amount: req.body.totalamount * 100, // amount in paise (50000 paise = ₹500)
     currency: "INR",
     receipt: "order_rcptid_11",
     payment_capture: 1, // Auto-capture payment
   };
-
+  console.log("payment route is hit");
   const order = await instance.orders.create(options);
   console.log(order);
 

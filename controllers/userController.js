@@ -128,9 +128,9 @@ module.exports.getUserAllDetails = catchAsync(async (req, res) => {
 
   // Fetch all user data, including sensitive details
   const userData = await User.findById(_id).select(
-    "fname lname email gender dob accountStatus address phoneNumber orders"
+    "fname lname email gender dob accountStatus address phoneNumber"
   );
-
+  console.log(userData);
   // If user not found, return an error
   if (!userData) {
     throw new AppError(404, "User not found");
