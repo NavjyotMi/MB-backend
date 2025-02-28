@@ -9,16 +9,16 @@ const instance = new Razorpay({
 });
 
 module.exports.createPayment = catchAsync(async (req, res) => {
-  console.log("req body is hit", req.body);
+  // console.log("req body is hit", req.body);
   const options = {
     amount: req.body.totalamount * 100, // amount in paise (50000 paise = ₹500)
     currency: "INR",
     receipt: "order_rcptid_11",
     payment_capture: 1, // Auto-capture payment
   };
-  console.log("payment route is hit");
+  // console.log("payment route is hit");
   const order = await instance.orders.create(options);
-  console.log(order);
+  // console.log(order);
 
   res.json(order);
 });
@@ -26,7 +26,7 @@ module.exports.createPayment = catchAsync(async (req, res) => {
 module.exports.verifyPayment = (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
     req.body;
-  console.log("the payment is successfull");
+  // console.log("the payment is successfull");
   const secret = process.env.RAZORPAY_KEY_SECRET; // Razorpay Secret Key
   const generated_signature = crypto
     .createHmac("sha256", secret)

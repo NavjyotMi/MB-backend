@@ -12,11 +12,11 @@ const orderSchema = z.object({
     message: "Invalid user ID",
   }),
   shippingInfo: z.object({
-    address: z.string().min(1, "Address is required"),
+    street: z.string().min(1, "Address is required"),
     city: z.string().min(1, "City is required"),
     state: z.string().min(1, "State is required"),
     country: z.string().min(1, "Country is required"),
-    pinCode: z.number(),
+    zipCode: z.string(),
   }),
   products: z.array(
     z.object({
@@ -48,16 +48,17 @@ module.exports.createOrder = catchAsync(async (req, res) => {
 
   const parseddate = orderSchema.safeParse(data);
 
-  if (!parseddate.success)
+  if (!parseddate.success) {
     throw new AppError(401, "there is some parsing error");
+  }
   const order = {
     userId: data.userId,
     shippingInfo: {
-      address: data.shippingInfo.address,
+      street: data.shippingInfo.street,
       city: data.shippingInfo.city,
       state: data.shippingInfo.state,
       country: data.shippingInfo.country,
-      pinCode: data.shippingInfo.pinCode,
+      zipCode: data.shippingInfo.zipCode,
     },
     products: [...data.products],
     subtotal: data.subtotal,

@@ -146,7 +146,7 @@ module.exports.getUserAllDetails = catchAsync(async (req, res) => {
 module.exports.updateUserInfo = catchAsync(async (req, res) => {
   const { _id } = req.user;
   const incommingData = req.body;
-
+  console.log("is it even reaching at updateinfo");
   if (incommingData.dob && isNaN(Date.parse(incommingData.dob))) {
     throw new AppError(400, "Invalid date format");
   }
@@ -154,6 +154,8 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
   if (incommingData.address && typeof incommingData.address !== "object") {
     throw new AppError(400, "Address should be an object");
   }
+
+  console.log(incommingData);
 
   const updatedValue = {};
   if (incommingData.lname) updatedValue.lname = incommingData.lname;
@@ -163,6 +165,7 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
   if (incommingData.phoneNumber)
     updatedValue.phoneNumber = incommingData.phoneNumber;
   if (incommingData.address) updatedValue.address = incommingData.address;
+  console.log("line 168", updatedValue);
 
   const updatedUser = await User.findByIdAndUpdate(
     { _id },
@@ -170,7 +173,7 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
     { new: true, runValidators: true }
   );
   if (!updatedUser) throw new AppError(404, "User Not Found");
-
+  console.log(updatedUser);
   return res.status(200).json({
     message: "Successfully updated",
     updateduser: {

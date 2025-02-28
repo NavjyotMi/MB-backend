@@ -182,10 +182,6 @@ module.exports.showAllProduct = catchAsync(async (req, res) => {
     .sort({ price: sorting })
     .lean();
 
-  // console.log(products);
-  // if (products.length === 0)
-  //   return res.status(200).json({ message: "No product found" }
-  // );
 
   res.json({
     message: "All your products",

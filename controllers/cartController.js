@@ -4,6 +4,7 @@ const zod = require("zod");
 const { default: mongoose } = require("mongoose");
 const AppError = require("../utils/AppError");
 const cart = require("../models/cart");
+const User = require("../models/users");
 
 const addToCartSchema = zod.object({
   userId: zod
@@ -41,9 +42,7 @@ module.exports.addToCart = catchAsync(async (req, res) => {
 
   if (!success)
     throw new AppError(401, error.errors.map((err) => err.message).join(", "));
-  // step 2 check if we have a cart on users id
   let cart = await Cart.findOne({ userId });
-  // step 3 if not then create one and add this to the cart
   if (!cart) {
     const cartItem = {
       userId,
@@ -116,8 +115,18 @@ module.exports.getCart = catchAsync(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new AppError(400, "Invalid user id");
   let cart = await Cart.findOne({ userId: id });
+  let userAdd = await User.findById(id).select("address");
+  // console.log(userAdd);
   // console.log("this is not hit or what", cart);
-
+  if (userAdd) {
+    return res.status(200).json({
+      status: "success",
+      message: "retrieved all the cart",
+      cart,
+      userAdd,
+    });
+  }
+  console.log(cart);
   res
     .status(200)
     .json({ status: "success", message: "retrieved all the cart", cart });
@@ -148,7 +157,7 @@ module.exports.updateCart = catchAsync(async (req, res) => {
   // Update total quantity and price
   cart.totalQuantity += req.body.quantity;
   cart.totalPrice += req.body.quantity * cart.items[itemIndex].price;
-  console.log("cart", cart);
+  // console.log("cart", cart);
 
   // Save the updated cart
   await cart.save();
@@ -188,5 +197,14 @@ module.exports.removeCart = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "success",
     message: "the item deleted successfully",
+  });
+});
+
+module.exports.deleteCart = catchAsync(async (req, res) => {
+  const { id } = req.body;
+  console.log("reaching to the delete cart", id);
+  Cart.findByIdAndDelete(id);
+  res.status(200).json({
+    message: "the cart is deleted",
   });
 });
