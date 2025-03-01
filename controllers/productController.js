@@ -195,6 +195,7 @@ module.exports.getProductbyId = catchAsync(async (req, res) => {
   const { id } = req.params;
   // console.log(id);
   if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log("why is this hitting getproductby id");
     throw new AppError(400, "Invalid product ID");
   }
 

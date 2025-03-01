@@ -15,6 +15,7 @@ const signupSchema = zod.object({
   gender: zod.enum(["male", "female"]),
 });
 
+// console.log;
 // User Registation
 module.exports.signupHandler = catchAsync(async (req, res) => {
   const incommingData = req.body;
@@ -94,7 +95,7 @@ module.exports.signInHandler = catchAsync(async (req, res) => {
     email: user.email,
   });
 
-  console.log(jwt);
+  // console.log(jwt);
   // final sending of data
   res.json({
     status: "Success",
@@ -106,7 +107,7 @@ module.exports.signInHandler = catchAsync(async (req, res) => {
 // Get the user info
 module.exports.getUserInfo = catchAsync(async (req, res) => {
   const { _id } = req.user;
-  console.log(_id);
+  console.log("this is from getUserinfo", _id);
   const users = await User.findById(_id).select(
     "fname lname accountStatus role"
   );
@@ -130,7 +131,7 @@ module.exports.getUserAllDetails = catchAsync(async (req, res) => {
   const userData = await User.findById(_id).select(
     "fname lname email gender dob accountStatus address phoneNumber"
   );
-  console.log(userData);
+  console.log("this is from getUserAllDetails", userData);
   // If user not found, return an error
   if (!userData) {
     throw new AppError(404, "User not found");
@@ -146,7 +147,7 @@ module.exports.getUserAllDetails = catchAsync(async (req, res) => {
 module.exports.updateUserInfo = catchAsync(async (req, res) => {
   const { _id } = req.user;
   const incommingData = req.body;
-  console.log("is it even reaching at updateinfo");
+  // console.log("is it even reaching at updateinfo");
   if (incommingData.dob && isNaN(Date.parse(incommingData.dob))) {
     throw new AppError(400, "Invalid date format");
   }
@@ -155,7 +156,7 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
     throw new AppError(400, "Address should be an object");
   }
 
-  console.log(incommingData);
+  // console.log(incommingData);
 
   const updatedValue = {};
   if (incommingData.lname) updatedValue.lname = incommingData.lname;
@@ -165,7 +166,7 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
   if (incommingData.phoneNumber)
     updatedValue.phoneNumber = incommingData.phoneNumber;
   if (incommingData.address) updatedValue.address = incommingData.address;
-  console.log("line 168", updatedValue);
+  // console.log("line 168", updatedValue);
 
   const updatedUser = await User.findByIdAndUpdate(
     { _id },
@@ -173,7 +174,7 @@ module.exports.updateUserInfo = catchAsync(async (req, res) => {
     { new: true, runValidators: true }
   );
   if (!updatedUser) throw new AppError(404, "User Not Found");
-  console.log(updatedUser);
+  // console.log(updatedUser);
   return res.status(200).json({
     message: "Successfully updated",
     updateduser: {
