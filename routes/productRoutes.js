@@ -6,6 +6,7 @@ const {
   updateProduct,
   getProductbyId,
   getCategory,
+  getVendorProduct,
 } = require("../controllers/productController");
 const { authenticate } = require("../utils/authorization");
 const adminOnly = require("../middlewares/adminCheck");
@@ -28,4 +29,5 @@ routes.delete(
   deleteProduct
 );
 routes.get("/:id", getProductbyId);
+routes.get("/vendor/:id", getVendorProduct);
 module.exports = routes;

@@ -1,16 +1,11 @@
 const multer = require("multer");
 const zod = require("zod");
-const { rm } = require("fs");
 const Product = require("../models/product");
 const mongoose = require("mongoose");
-const { log } = require("console");
-// const uploads = multer({ dest: ".././uploads" });
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const { deleteImage } = require("../utils/deleteImage");
-const { cloudinary_js_config } = require("../utils/cloudinaryConfig");
 const product = require("../models/product");
-const { loadavg } = require("os");
 
 const productSchema = zod.object({
   name: zod.string(),
@@ -182,7 +177,6 @@ module.exports.showAllProduct = catchAsync(async (req, res) => {
     .sort({ price: sorting })
     .lean();
 
-
   res.json({
     message: "All your products",
     data: {
@@ -219,5 +213,22 @@ module.exports.getCategory = catchAsync(async (req, res) => {
   const categories = await Product.distinct("category");
   res.json({
     category: categories,
+  });
+});
+
+// Get All product vendor wise
+module.exports.getVendorProduct = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    throw new AppError(404, "Invalid Id");
+
+  const data = await Product.find({ seller: id });
+  // console.log(data);
+  res.status(200).json({
+    status: "success",
+    message: "Product received successfully",
+    data,
   });
 });

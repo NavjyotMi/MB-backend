@@ -108,7 +108,6 @@ module.exports.getVendorOrder = catchAsync(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return next(new AppError(400, "Invalid vendor ID"));
   }
-  console.log(id);
 
   const vendorOrder = await Order.aggregate([
     {
@@ -122,9 +121,9 @@ module.exports.getVendorOrder = catchAsync(async (req, res) => {
     },
     {
       $group: {
-        _id: "$_id", // Group back into orders
-        products: { $push: "$products" }, // Reconstruct the filtered products array
-        shippingInfo: { $first: "$shippingInfo" }, // Keep shipping info
+        _id: "$_id",
+        products: { $push: "$products" },
+        shippingInfo: { $first: "$shippingInfo" },
       },
     },
   ]);
