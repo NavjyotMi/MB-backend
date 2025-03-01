@@ -16,7 +16,10 @@ app.use(express.json());
 db();
 app.use("/api/v1", Routes);
 app.use(errorHandler);
-
+app.use((req, res, next) => {
+  console.log("Request Path:", req.path);
+  next();
+});
 app.listen(process.env.PORT, () => {
   console.log("the server is running");
 });
