@@ -30,6 +30,7 @@ const addToCartSchema = zod.object({
 module.exports.addToCart = catchAsync(async (req, res) => {
   const { userId, productId, name, price, quantity, sellerId, imageUrl } =
     req.body;
+  console.log(req.body);
   const { success, error } = addToCartSchema.safeParse({
     userId,
     productId,
@@ -39,7 +40,7 @@ module.exports.addToCart = catchAsync(async (req, res) => {
     quantity,
     sellerId,
   });
-
+  console.log(userId);
   if (!success)
     throw new AppError(401, error.errors.map((err) => err.message).join(", "));
   let cart = await Cart.findOne({ userId });
@@ -112,12 +113,13 @@ module.exports.addToCart = catchAsync(async (req, res) => {
 
 module.exports.getCart = catchAsync(async (req, res) => {
   const { id } = req.params;
+
+  console.log(req.params);
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new AppError(400, "Invalid user id");
   let cart = await Cart.findOne({ userId: id });
   let userAdd = await User.findById(id).select("address");
   // console.log(userAdd);
-  // console.log("this is not hit or what", cart);
   if (userAdd) {
     return res.status(200).json({
       status: "success",
@@ -172,9 +174,7 @@ module.exports.updateCart = catchAsync(async (req, res) => {
 // remove the cart
 module.exports.removeCart = catchAsync(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const { itemId, quantity, price } = req.body;
-  console.log("is this reaching here");
   const finalPrice = quantity * price;
   if (!mongoose.Types.ObjectId.isValid(id))
     throw new AppError(400, "Invalid cart id");
@@ -194,6 +194,14 @@ module.exports.removeCart = catchAsync(async (req, res) => {
       },
     }
   );
+
+  if (updatedCart.items.length === 0) {
+    await Cart.findByIdAndDelete(id);
+    return res.status(200).json({
+      status: "success",
+      message: "Cart is now empty and deleted",
+    });
+  }
   res.status(200).json({
     status: "success",
     message: "the item deleted successfully",
